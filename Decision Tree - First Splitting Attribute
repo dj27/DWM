@@ -1,0 +1,153 @@
+import csv
+import math
+import random
+import pandas as pd
+lines = pd.read_csv('/content/income.csv')
+print(lines)
+#Step 1 : Calvulation of H(D)
+prior = lines.groupby('Buys Computer').size().div(len(lines)) 
+print (prior)
+prior2 = lines.groupby('Buys Computer')
+A=prior2.get_group('no').shape[0]/len(lines)
+B=prior2.get_group('yes').shape[0]/len(lines)
+print("No =" ,A)
+print("Yes =",B)
+HD=A*math.log10(1/A)+B*math.log10(1/B)
+print ("H(D)=",HD)
+#Step 2 Calculate Entropy of Each Splitting Attribute
+#Student
+prior3 = lines.groupby('Student')
+print (prior3)
+A=prior3.get_group('yes').shape[0]
+B=prior3.get_group('no').shape[0]
+H=lines.groupby(['Student','Buys Computer']).size()
+print(H)
+H1=lines.groupby(['Student','Buys Computer'])
+H2=H1.get_group(('yes','yes')).shape[0]/A
+H3=H1.get_group(('yes','no')).shape[0]/A
+H4=H1.get_group(('no','yes')).shape[0]/B
+H5=H1.get_group(('no','no')).shape[0]/B
+
+D1=H2*math.log10(1/H2)+H3*math.log10(1/H3)
+D2=H4*math.log10(1/H4)+H5*math.log10(1/H5)
+"""print(H2)
+print(H3)
+print(H4)
+print(H5)"""
+
+print("D1=",D1)
+print("D2=",D2)
+aa=(A)/(A+B)
+bb=(B)/(A+B)
+Gain=HD-D1*aa-D2*bb
+S1="Student"
+print ("Gain is",Gain )
+#Step 3 Calculate Entropy of Each Splitting Attribute
+#Credit Rating
+prior3 = lines.groupby('Credit_Rating')
+print (prior3)
+A=prior3.get_group('fair').shape[0]
+B=prior3.get_group('excellent').shape[0]
+H=lines.groupby(['Credit_Rating','Buys Computer']).size()
+print(H)
+H1=lines.groupby(['Credit_Rating','Buys Computer'])
+H2=H1.get_group(('fair','yes')).shape[0]/A
+H3=H1.get_group(('fair','no')).shape[0]/A
+H4=H1.get_group(('excellent','yes')).shape[0]/B
+H5=H1.get_group(('excellent','no')).shape[0]/B
+
+D1=H2*math.log10(1/H2)+H3*math.log10(1/H3)
+D2=H4*math.log10(1/H4)+H5*math.log10(1/H5)
+"""print(H2)
+print(H3)
+print(H4)
+print(H5)"""
+
+print("D1=",D1)
+print("D2=",D2)
+aa=(A)/(A+B)
+bb=(B)/(A+B)
+Gain1=HD-D1*aa-D2*bb
+print ("Gain is",Gain1 )
+S2="Credit Rating"
+#Step 3 Calculate Entropy of Each Splitting Attribute
+#Income
+prior5 = lines.groupby('Income')
+print (prior5)
+A=prior5.get_group('high').shape[0]
+B=prior5.get_group('medium').shape[0]
+C=prior5.get_group('low').shape[0]
+H=lines.groupby(['Income','Buys Computer']).size()
+print(H)
+H1=lines.groupby(['Income','Buys Computer'])
+H2=H1.get_group(('high','yes')).shape[0]/A
+H3=H1.get_group(('high','no')).shape[0]/A
+H4=H1.get_group(('medium','yes')).shape[0]/B
+H5=H1.get_group(('medium','no')).shape[0]/B
+H6=H1.get_group(('low','yes')).shape[0]/C
+H7=H1.get_group(('low','no')).shape[0]/C
+
+D1=H2*math.log10(1/H2)+H3*math.log10(1/H3)
+D2=H4*math.log10(1/H4)+H5*math.log10(1/H5)
+D3=H6*math.log10(1/H6)+H7*math.log10(1/H7)
+"""print(H2)
+print(H3)
+print(H4)
+print(H5)"""
+
+print("D1=",D1)
+print("D2=",D2)
+print("D3=",D3)
+
+aa=(A)/(A+B+C)
+bb=(B)/(A+B+C)
+cc=(C)/(A+B+C)
+
+Gain2=HD-D1*aa-D2*bb-D3*cc
+print ("Gain is",Gain2 )
+S3="Income"
+#Step 3 Calculate Entropy of Each Splitting Attribute
+#Age
+prior6 = lines.groupby('Age')
+print (prior6)
+A=prior6.get_group("<=30").shape[0]
+B=prior6.get_group("31?40").shape[0]
+C=prior6.get_group(">40").shape[0]
+H=lines.groupby(['Age','Buys Computer']).size()
+print(H)
+H1=lines.groupby(['Age','Buys Computer'])
+H2=H1.get_group(("<=30",'yes')).shape[0]/A
+H3=H1.get_group(("<=30",'no')).shape[0]/A
+H4=H1.get_group(("31?40",'yes')).shape[0]/B
+#H5=H1.get_group(("31?40",'no')).shape[0]/B
+H6=H1.get_group((">40",'yes')).shape[0]/C
+H7=H1.get_group((">40",'no')).shape[0]/C
+
+D1=H2*math.log10(1/H2)+H3*math.log10(1/H3)
+D2=H4*math.log10(1/H4)+H5*math.log10(1/H5)
+D3=H6*math.log10(1/H6)+H7*math.log10(1/H7)
+"""print(H2)
+print(H3)
+print(H4)
+print(H5)"""
+
+print("D1=",D1)
+print("D2=",D2)
+print("D3=",D3)
+
+aa=(A)/(A+B+C)
+bb=(B)/(A+B+C)
+cc=(C)/(A+B+C)
+
+Gain3=HD-D1*aa-D2*bb-D3*cc
+print ("Gain is",Gain3 )
+S4="Age"
+A= max(Gain,Gain1,Gain2,Gain3)
+if (A==Gain):
+  print(S1,"is the splitting attribute")
+if (A==Gain1):
+  print(S2,"is the splitting attribute")
+if (A==Gain2):
+  print(S3,"is the splitting attribute")
+else:
+  print(S4,"is the splitting attribute")
